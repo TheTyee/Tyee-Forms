@@ -52,7 +52,7 @@ __PACKAGE__->table("subscriber");
 =head2 trnordernumber
 
   data_type: 'integer'
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 trnamount
 
@@ -144,7 +144,7 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
   },
   "trnordernumber",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_nullable => 1 },
   "trnamount",
   { data_type => "float", is_nullable => 0 },
   "trnemailaddress",
@@ -191,8 +191,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("trnid");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-12 10:19:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZIR3VcM/odeiG9+pn+X5hg
+# Created by DBIx::Class::Schema::Loader v0.07015 @ 2012-03-12 16:25:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Mo9VfPoy8iZ9Cl7rc/U22w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
