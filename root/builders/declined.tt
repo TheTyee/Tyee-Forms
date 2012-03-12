@@ -1,3 +1,5 @@
-<p>We're sorry, but your transaction was declined by our payment processor</p>
-<p>The message we received back from them was: "[% message %]"</p>
-<p><a href="https://www.beanstream.com/scripts/payment/payment.asp?merchant_id=250660000&trnLanguage=eng&trnAmount=[% trn_amt | uri %]&ordName=[% cust_name | uri %]&ordPhoneNumber=[% cust_phone | uri %]&ordEmailAddress=[% cust_email | uri %]">Click here to try again</a></p>
+<h1>Whoops! Something went wrong. :( </h1>
+        <p>We're sorry, but your transaction was declined by our payment processor.</p>
+        <p>The message we received back from them was: "[% message %]"</p>
+        <p><a href="https://www.beanstream.com/scripts/payment/payment.asp?merchant_id=250660000&trnLanguage=eng&trnAmount=[% trn_amt | uri %]&ordName=[% cust_name | uri %]&ordPhoneNumber=[% cust_phone | uri %]&ordEmailAddress=[% cust_email | uri %]">Click here to try again</a></p>
+        <p>If you think this is an error on our end, please drop us a line at WHO SHOULD THIS GO TO?</p>

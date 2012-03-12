@@ -1,17 +1,30 @@
-[% trn_amt %]
-<br />
-[% cust_name %]
-<br />
-[% cust_phone %]
-<br />
-[% cust_email %]
-<br />
-[% date %]
+<h1>Hey, you're a builder now! Thanks!</h1>
 
-<br />
-<hr />
+<p>Below are the details of your transaction. Feel free to print this page. You'll also recieve an official receipt via e-mail.</p>
+<p>Please double-check the information below to ensure it's accurate. If you see an error, please e-mail WHO SHOULD THIS GO TO?</p>
+
+<table id="order-info">
+<tr>
+<td>Date:</td><td>[% date %]</td>
+</tr>
+<tr>
+<td>Donation amount:</td><td>$[% trn_amt %]</td>
+</tr>
+<tr>
+<td>Order Number:</td><td>[% trn_id %]</td>
+</tr>
+<tr>
+<td>Name:</td><td>[% cust_name %]</td>
+</tr>
+<tr>
+<td>Phone number:</td><td>[% cust_phone %]</td>
+</tr>
+<tr>
+<td>E-mail:</td><td>[% cust_email %]</td>
+</tr>
+
+</table>
+
 [% USE Dumper %]
 
-[% Dumper.dump_html( whatcounts ) %]
-
-
+<!-- [% Dumper.dump_html( whatcounts ) %] -->
