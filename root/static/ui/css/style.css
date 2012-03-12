@@ -1,0 +1,6 @@
+body { width: auto 50%; }
+
+div[role="main"] { 
+    width: 600px;
+    border: 1px solid black;
+}
