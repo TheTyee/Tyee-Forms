@@ -22,6 +22,7 @@ requires 'DateTime';
 requires 'Catalyst::View:TT';
 requires 'HTTP::Tiny' => '0.017';
 requires 'DateTime::Format::MySQL';
+requires 'Catalyst::Plugin::CustomErrorMessage';
 
 test_requires 'Test::More' => '0.88';
 catalyst;
