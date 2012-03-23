@@ -5,10 +5,12 @@ use HTTP::Tiny;
 
 extends 'Catalyst::Model';
 
+
+my $http   = HTTP::Tiny->new();
+my $API    = 'http://premiere.whatcounts.com/bin/api_web?';
+
 sub create_or_update {
     my ( $self, $sub ) = @_;
-    my $http   = HTTP::Tiny->new();
-    my $API    = 'http://premiere.whatcounts.com/bin/api_web?';
     my %args = (
         r => $sub->{'realm_name'},
         p => $sub->{'pw'},
@@ -39,9 +41,8 @@ sub create_or_update {
     my $params = $http->www_form_urlencode( $get );
     my $response
         = $http->get( "http://premiere.whatcounts.com/bin/api_web?$params" );
-    return $response;
+    return ( $subscribed, $response );
 }
-
 
 
 # http://premiere.whatcounts.com/bin/api_web?r=media_thetyee&p=XXXXX&cmd=sub&list_id=36871&data=email,first,last^jane@domain.com,Jane,Doe

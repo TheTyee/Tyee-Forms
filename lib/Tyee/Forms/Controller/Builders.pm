@@ -3,8 +3,17 @@ use Moose;
 use namespace::autoclean;
 use Date::Parse;
 use DateTime;
+use Data::Dumper;
+use Tyee::Forms::BuilderSurvey;
 
 BEGIN { extends 'Catalyst::Controller'; }
+
+has 'form' => (
+    isa     => 'Tyee::Forms::BuilderSurvey',
+    is      => 'rw',
+    lazy    => 1,
+    default => sub { Tyee::Forms::BuilderSurvey->new }
+);
 
 =head1 NAME
 
@@ -22,69 +31,93 @@ Catalyst Controller.
 
 =cut
 
-sub index : Path : Args(0) {
+sub index : Chained('/') PathPart('builders') CaptureArgs(0) {
     my ( $self, $c ) = @_;
+    my $id    = $c->req->params->{'trnId'};
+    my $amt   = $c->req->params->{'trnAmount'} // 'na';
+    my $date  = $c->req->params->{'trnDate'} // 'na';
+    my $name  = $c->req->params->{'trnCustomerName'} // 'na';
+    my $email = $c->req->params->{'trnEmailAddress'} // 'na';
+    my $phone = $c->req->params->{'trnPhoneNumber'} // 'na';
+    my $auth  = $c->req->params->{'authCode'} // 'na';
+    my $msg   = $c->req->params->{'messageText'} // 'na';
+    my $epoch = str2time( $date );
+    my $dt    = DateTime->from_epoch( epoch => $epoch );
+    my ( $fname, $lname ) = split( ' ', $name );
+    $c->stash(
+        trnid           => $id,
+        trnamount       => $amt,
+        date            => $date,
+        name_full       => $name,
+        trnemailaddress => $email,
+        trnphonenumber  => $phone,
+        authcode        => $auth,
+        name_first      => $fname,
+        name_last       => $lname,
+        messagetext     => $msg,
+        trndate         => $dt,
+    );
 
-    $c->response->body(
-        'Matched Tyee::Forms::Controller::Builders in Builders TEST.' );
 }
 
-sub approved : Local : Args(0) {
+sub add_to_db : Chained('index') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    my $id     = $c->req->params->{'trnId'};
-    my $amt    = $c->req->params->{'trnAmount'} // 'na';
-    my $date   = $c->req->params->{'trnDate'} // 'na';
-    my $num    = $c->req->params->{'trnOrderNumber'} // 'na';
-    my $name   = $c->req->params->{'trnCustomerName'} // 'na';
-    my $email  = $c->req->params->{'trnEmailAddress'} // 'na';
-    my $phone  = $c->req->params->{'trnPhoneNumber'} // 'na';
-    my $auth   = $c->req->params->{'authCode'} // 'na';
-    my $msg    = $c->req->params->{'messageText'} // 'na';
-    my $postal = $c->req->params->{'ref1'} // 'na';
-    my $epoch  = str2time( $date );
-    my $dt     = DateTime->from_epoch( epoch => $epoch );
-    my ( $fname, $lname ) = split( ' ', $name );
     my $subscriber = $c->model( 'SubscriberDB::Subscriber' )->find_or_create(
-        {   trnemailaddress => $email,
-            trnphonenumber  => $phone,
-            trnordernumber  => $num,
-            trnamount       => $amt,
-            authcode        => $auth,
-            messagetext     => $msg,
-            trndate         => $dt,
-            name_first      => $fname,
-            name_last       => $lname,
-            name            => $name,     # In case the split screws up
-            postal          => $postal,
-            trnid           => $id,
+        {   trnemailaddress => $c->stash->{'trnemailaddress'},
+            trnphonenumber  => $c->stash->{'trnphonenumber'},
+            trnordernumber  => $c->stash->{'trnordernumber'},
+            trnamount       => $c->stash->{'trnamount'},
+            authcode        => $c->stash->{'authcode'},
+            messagetext     => $c->stash->{'messagetext'},
+            trndate         => $c->stash->{'trndate'},
+            name_first      => $c->stash->{'name_first'},
+            name_last       => $c->stash->{'name_last'},
+            name            => $c->stash->{'name_full'},   # In case the split screws up
+            trnid           => $c->stash->{'trnid'},
         }
     );
-    my $whatcounts = $c->model( 'WhatCounts' )->create_or_update(
-        {   builder_amt  => $amt,
-            builder_id   => $id,
-            builder_date => $dt->mdy( '/' ),
-            email        => $email,
+    $c->stash( subscriber => $subscriber );
+}
+
+sub add_to_wc : Chained('add_to_db') PathPart('') CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    my $subscriber = $c->stash->{'subscriber'};
+    my ( $sub_info, $whatcounts )
+        = $c->model( 'WhatCounts' )->create_or_update(
+        {   builder_amt  => $c->stash->{'trnamount'},
+            builder_id   => $c->stash->{'trnid'},
+            builder_date => $c->stash->{'trndate'},
+            email        => $c->stash->{'trnemailaddress'},
             list_id      => $c->config->{'whatcounts_list_id'},
             realm_name   => $c->config->{'whatcounts_realm_name'},
             pw           => $c->config->{'whatcounts_pw'},
         }
-    );
+        );
+    my ( $subscriber_id ) = ( $sub_info->{'content'} =~ m/^(\d+)/ );
     if ( $whatcounts->{'content'} =~ /success/i ) {
-        $subscriber->whatcounts('1');
+        # If the API call is successful, update the subscriber record in our database
+        $subscriber->whatcounts( '1' );
         $subscriber->whatcounts_msg( $whatcounts->{'content'} );
+        $subscriber->whatcounts_sub_id( $subscriber_id );
         $subscriber->update;
     }
-    $c->stash(
-        trn_id     => $id,
-        cust_name  => $name,
-        trn_amt    => $amt,
-        trn_num    => $num,
-        cust_email => $email,
-        cust_phone => $phone,
-        date       => $date,
-        title      => 'Your transaction was successful',
-        whatcounts => $whatcounts,
-    );
+}
+
+sub approved : Chained('add_to_wc') : PathPart('approved') : Args(0) {
+    my ( $self, $c ) = @_;
+    my $form = $self->form;
+    $c->stash( form => $form );
+    # Validate and insert/update database
+    return
+        unless $form->process(
+        item_id => $c->stash->{'trnid'},
+        params  => $c->req->parameters,
+        schema  => $c->model( 'SubscriberDB' )->schema
+        );
+
+    # Form validated, return to the books list
+    #$c->stash->{status_msg} = 'Your preferences have been saved. Thank you!';
+    #$c->res->redirect($c->uri_for('index'));
 }
 
 sub declined : Local : Args(0) {

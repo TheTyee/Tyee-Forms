@@ -108,12 +108,6 @@ __PACKAGE__->table("subscriber");
   default_value: current_timestamp
   is_nullable: 0
 
-=head2 postal
-
-  data_type: 'varchar'
-  is_nullable: 0
-  size: 255
-
 =head2 comment
 
   data_type: 'bit'
@@ -128,9 +122,119 @@ __PACKAGE__->table("subscriber");
 
 =head2 whatcounts_msg
 
-  data_type: 'varchar'
+  data_type: 'text'
   is_nullable: 1
-  size: 2056
+
+=head2 whatcounts_sub_id
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 newspref_accountgov
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 newspref_arts_comm
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 newspref_crime_just
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 newspref_economy
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 newspref_education
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 newspref_energy
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 newspref_enviro
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 newspref_health
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 newspref_housing
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 newspref_poverty
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 newspref_rights_just
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 pref_fiction
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 pref_future_enews
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 pref_enews_daily
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 pref_enews_weekly
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 pref_sponsor_enews
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 builder_is_anonymous
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
+
+=head2 is_comment_avatar
+
+  data_type: 'bit'
+  is_nullable: 1
+  size: 1
 
 =cut
 
@@ -168,14 +272,50 @@ __PACKAGE__->add_columns(
     default_value => \"current_timestamp",
     is_nullable => 0,
   },
-  "postal",
-  { data_type => "varchar", is_nullable => 0, size => 255 },
   "comment",
   { data_type => "bit", is_nullable => 1, size => 1 },
   "whatcounts",
   { data_type => "bit", is_nullable => 1, size => 1 },
   "whatcounts_msg",
-  { data_type => "varchar", is_nullable => 1, size => 2056 },
+  { data_type => "text", is_nullable => 1 },
+  "whatcounts_sub_id",
+  { data_type => "integer", is_nullable => 1 },
+  "newspref_accountgov",
+  { data_type => "integer", is_nullable => 1 },
+  "newspref_arts_comm",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "newspref_crime_just",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "newspref_economy",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "newspref_education",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "newspref_energy",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "newspref_enviro",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "newspref_health",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "newspref_housing",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "newspref_poverty",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "newspref_rights_just",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "pref_fiction",
+  { data_type => "integer", is_nullable => 1 },
+  "pref_future_enews",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "pref_enews_daily",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "pref_enews_weekly",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "pref_sponsor_enews",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "builder_is_anonymous",
+  { data_type => "bit", is_nullable => 1, size => 1 },
+  "is_comment_avatar",
+  { data_type => "bit", is_nullable => 1, size => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -191,8 +331,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("trnid");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07015 @ 2012-03-12 16:25:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Mo9VfPoy8iZ9Cl7rc/U22w
+# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-22 21:07:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qK543U/l7yRy6DfTZTo30w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
