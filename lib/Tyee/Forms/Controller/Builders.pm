@@ -33,29 +33,22 @@ Catalyst Controller.
 
 sub index : Chained('/') PathPart('builders') CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    my $id    = $c->req->params->{'trnId'};
-    my $amt   = $c->req->params->{'trnAmount'} // 'na';
-    my $date  = $c->req->params->{'trnDate'} // 'na';
-    my $name  = $c->req->params->{'trnCustomerName'} // 'na';
-    my $email = $c->req->params->{'trnEmailAddress'} // 'na';
-    my $phone = $c->req->params->{'trnPhoneNumber'} // 'na';
-    my $auth  = $c->req->params->{'authCode'} // 'na';
-    my $msg   = $c->req->params->{'messageText'} // 'na';
-    my $epoch = str2time( $date );
-    my $dt    = DateTime->from_epoch( epoch => $epoch );
-    my ( $fname, $lname ) = split( ' ', $name );
+    my $dt    = DateTime->from_epoch( epoch => str2time( $c->req->params->{'trnDate'} ) );
+    my ( $fname, $lname ) = split( ' ', $c->req->params->{'trnCustomerName'} );
     $c->stash(
-        trnid           => $id,
-        trnamount       => $amt,
-        date            => $date,
-        name_full       => $name,
-        trnemailaddress => $email,
-        trnphonenumber  => $phone,
-        authcode        => $auth,
-        name_first      => $fname,
-        name_last       => $lname,
-        messagetext     => $msg,
-        trndate         => $dt,
+        params => {
+            trnid           => $c->req->params->{'trnId'},
+            trnamount       => $c->req->params->{'trnAmount'},
+            trndate            => $c->req->params->{'trnDate'},
+            name       => $c->req->params->{'trnCustomerName'},
+            trnemailaddress => $c->req->params->{'trnEmailAddress'},
+            trnphonenumber  => $c->req->params->{'trnPhoneNumber'},
+            authcode        => $c->req->params->{'authCode'},
+            name_first      => $fname,
+            name_last       => $lname,
+            messagetext     => $c->req->params->{'messageText'},
+            trndate         => $dt,
+        }
     );
 
 }
@@ -63,18 +56,7 @@ sub index : Chained('/') PathPart('builders') CaptureArgs(0) {
 sub add_to_db : Chained('index') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
     my $subscriber = $c->model( 'SubscriberDB::Subscriber' )->find_or_create(
-        {   trnemailaddress => $c->stash->{'trnemailaddress'},
-            trnphonenumber  => $c->stash->{'trnphonenumber'},
-            trnordernumber  => $c->stash->{'trnordernumber'},
-            trnamount       => $c->stash->{'trnamount'},
-            authcode        => $c->stash->{'authcode'},
-            messagetext     => $c->stash->{'messagetext'},
-            trndate         => $c->stash->{'trndate'},
-            name_first      => $c->stash->{'name_first'},
-            name_last       => $c->stash->{'name_last'},
-            name            => $c->stash->{'name_full'},   # In case the split screws up
-            trnid           => $c->stash->{'trnid'},
-        }
+        $c->stash->{'params'}
     );
     $c->stash( subscriber => $subscriber );
 }
@@ -95,7 +77,8 @@ sub add_to_wc : Chained('add_to_db') PathPart('') CaptureArgs(0) {
         );
     my ( $subscriber_id ) = ( $sub_info->{'content'} =~ m/^(\d+)/ );
     if ( $whatcounts->{'content'} =~ /success/i ) {
-        # If the API call is successful, update the subscriber record in our database
+
+ # If the API call is successful, update the subscriber record in our database
         $subscriber->whatcounts( '1' );
         $subscriber->whatcounts_msg( $whatcounts->{'content'} );
         $subscriber->whatcounts_sub_id( $subscriber_id );
@@ -107,27 +90,30 @@ sub approved : Chained('add_to_wc') : PathPart('approved') : Args(0) {
     my ( $self, $c ) = @_;
     my $form = $self->form;
     $c->stash( form => $form );
+
     # Validate and insert/update database
-    return
-        unless $form->process(
-        item_id => $c->stash->{'trnid'},
+    $form->process(
+        item_id => $c->stash->{'params'}->{'trnid'},
         params  => $c->req->parameters,
         schema  => $c->model( 'SubscriberDB' )->schema
-        );
-
-    # Form validated, return to the books list
-    #$c->stash->{status_msg} = 'Your preferences have been saved. Thank you!';
-    #$c->res->redirect($c->uri_for('index'));
+    );
+    return unless $form->validated;
+    if ( $c->req->method eq 'POST' ) {
+        # Form validated, return to the books list
+        $c->stash->{status_msg}
+            = 'Your preferences have been saved.';
+    }
 }
+
 
 sub declined : Local : Args(0) {
     my ( $self, $c ) = @_;
     my $id    = $c->req->params->{'trnId'};
-    my $amt   = $c->req->params->{'trnAmount'} // 'na';
-    my $name  = $c->req->params->{'trnCustomerName'} // 'na';
-    my $email = $c->req->params->{'trnEmailAddress'} // 'na';
-    my $phone = $c->req->params->{'trnPhoneNumber'} // 'na';
-    my $msg   = $c->req->params->{'messageText'} // 'na';
+    my $amt   = $c->req->params->{'trnAmount'};
+    my $name  = $c->req->params->{'trnCustomerName'};
+    my $email = $c->req->params->{'trnEmailAddress'};
+    my $phone = $c->req->params->{'trnPhoneNumber'};
+    my $msg   = $c->req->params->{'messageText'};
     $c->stash(
         trn_id     => $id,
         message    => $msg,

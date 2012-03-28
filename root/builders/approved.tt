@@ -1,34 +1,42 @@
-<div id="status-message">[% status_msg %]</div>
+[% USE Dumper %]
+<!-- [% Dumper.dump_html( params ) %] --> 
 
-<h1>Hey, you're a builder now! Thanks!</h1>
+<span class="message"><p>[% status_msg %]</p></span>
+<span class="error"><p>[% error_msg %]</p></span>
+
+<h1>Hey, you're a Builder now! Thanks!</h1>
 
 <p>Below are the details of your transaction. Feel free to print this page. You'll also recieve an official receipt via e-mail.</p>
-<p>Please double-check the information below to ensure it's accurate. If you see an error, please e-mail WHO SHOULD THIS GO TO?</p>
+<p>Please double-check the information below to ensure it's accurate. If you see an error, please e-mail <a href="mailto:ssmart@thetyee.ca">Shannon Smart</a>.</p>
 
 <table id="order-info">
 <tr>
-<td><b>Order Number:</b></td><td><b>[% trnid %]</b></td>
+<td><b>Order Number:</b></td><td><b>[% params.trnid %]</b></td>
 </tr>
 <tr>
-<td>Date:</td><td>[% date %]</td>
+<td>Date:</td><td>[% params.trndate %]</td>
 </tr>
 <tr>
-<td>Donation amount:</td><td>$[% trnamount %]</td>
+<td>Donation amount:</td><td>$[% params.trnamount %]</td>
 </tr>
 <tr>
-<td>Name:</td><td>[% name_full %]</td>
+<td>Name:</td><td>[% params.name %]</td>
 </tr>
 <tr>
-<td>Phone number:</td><td>[% trnphonenumber %]</td>
+<td>Phone number:</td><td>[% params.trnphonenumber %]</td>
 </tr>
 <tr>
-<td>E-mail:</td><td>[% trnemailaddress %]</td>
+<td>E-mail:</td><td>[% params.trnemailaddress %]</td>
 </tr>
-
 </table>
 
+<p>Now that you’re part of The Tyee, we’d like to get to know you a little better. Please take a moment to answer a couple of questions to complete your registration.</p>
+
+<div id="form">
+<h2>Voting on The Tyee’s News Priorities</h2>
+<p>Knowing your news priorities helps us decide which issues to focus your money on. So, please take a moment and choose your top three issues from the list below:</p>
 [% form.render %]
+</div>
 
-[% USE Dumper %]
-
-<!-- [% Dumper.dump_html( whatcounts, sub_id ) %] -->
+<br />
+<br />
