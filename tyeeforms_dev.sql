@@ -11,7 +11,7 @@
  Target Server Version : 50521
  File Encoding         : utf-8
 
- Date: 03/23/2012 13:59:42 PM
+ Date: 03/28/2012 13:39:28 PM
 */
 
 SET NAMES utf8;
@@ -24,7 +24,6 @@ DROP TABLE IF EXISTS `subscriber`;
 CREATE TABLE `subscriber` (
   `trnId` int(11) NOT NULL,
   `trnDate` datetime NOT NULL,
-  `trnOrderNumber` int(11) DEFAULT NULL,
   `trnAmount` float NOT NULL,
   `trnEmailAddress` varchar(255) NOT NULL,
   `trnPhoneNumber` varchar(255) NOT NULL,

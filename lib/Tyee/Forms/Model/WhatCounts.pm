@@ -44,21 +44,6 @@ sub create_or_update {
     return ( $subscribed, $response );
 }
 
-
-# http://premiere.whatcounts.com/bin/api_web?r=media_thetyee&p=XXXXX&cmd=sub&list_id=36871&data=email,first,last^jane@domain.com,Jane,Doe
-# http://premiere.whatcounts.com/bin/list_edit2?cmd=edit&id=36871&CSRFChallengeToken=%2590%25E0%25D6%25CCOo%251BX%252Bx%25E5%25DBi%258E%25AD%25D7%250A%25DD%253A%259F%25DE%259F%25F9J%258A%25CDLR%25EF%25080Z%2508%2580%253A%25AEBn%25F1%25F4%2504%2580F%25C1%255D%25E5%25A8%25E7%255E%25EA%2590%25D3%2596%25C0%25B0%25C1%25E9%250Aj%2511%25AE%2503%2597m
-#my $response = HTTP::Tiny->new->get( 'http://example.com/' );
-
-#die "Failed!\n" unless $response->{success};
-
-#print "$response->{status} $response->{reason}\n";
-
-#while ( my ( $k, $v ) = each %{ $response->{headers} } ) {
-#for ( ref $v eq 'ARRAY' ? @$v : $v ) {
-#print "$k: $_\n";
-#}
-#}
-
 =head1 NAME
 
 Tyee::Forms::Model::WhatCounts - Catalyst Model

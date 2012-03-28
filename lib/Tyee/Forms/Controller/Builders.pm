@@ -33,14 +33,16 @@ Catalyst Controller.
 
 sub index : Chained('/') PathPart('builders') CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    my $dt    = DateTime->from_epoch( epoch => str2time( $c->req->params->{'trnDate'} ) );
-    my ( $fname, $lname ) = split( ' ', $c->req->params->{'trnCustomerName'} );
+    my $dt = DateTime->from_epoch(
+        epoch => str2time( $c->req->params->{'trnDate'} ) );
+    my ( $fname, $lname )
+        = split( ' ', $c->req->params->{'trnCustomerName'} );
     $c->stash(
         params => {
             trnid           => $c->req->params->{'trnId'},
             trnamount       => $c->req->params->{'trnAmount'},
-            trndate            => $c->req->params->{'trnDate'},
-            name       => $c->req->params->{'trnCustomerName'},
+            trndate         => $c->req->params->{'trnDate'},
+            name            => $c->req->params->{'trnCustomerName'},
             trnemailaddress => $c->req->params->{'trnEmailAddress'},
             trnphonenumber  => $c->req->params->{'trnPhoneNumber'},
             authcode        => $c->req->params->{'authCode'},
@@ -55,9 +57,8 @@ sub index : Chained('/') PathPart('builders') CaptureArgs(0) {
 
 sub add_to_db : Chained('index') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    my $subscriber = $c->model( 'SubscriberDB::Subscriber' )->find_or_create(
-        $c->stash->{'params'}
-    );
+    my $subscriber = $c->model( 'SubscriberDB::Subscriber' )
+        ->find_or_create( $c->stash->{'params'} );
     $c->stash( subscriber => $subscriber );
 }
 
@@ -66,10 +67,10 @@ sub add_to_wc : Chained('add_to_db') PathPart('') CaptureArgs(0) {
     my $subscriber = $c->stash->{'subscriber'};
     my ( $sub_info, $whatcounts )
         = $c->model( 'WhatCounts' )->create_or_update(
-        {   builder_amt  => $c->stash->{'trnamount'},
-            builder_id   => $c->stash->{'trnid'},
-            builder_date => $c->stash->{'trndate'},
-            email        => $c->stash->{'trnemailaddress'},
+        {   builder_amt  => $c->stash->{'params'}->{'trnamount'},
+            builder_id   => $c->stash->{'params'}->{'trnid'},
+            builder_date => $c->stash->{'params'}->{'trndate'},
+            email        => $c->stash->{'params'}->{'trnemailaddress'},
             list_id      => $c->config->{'whatcounts_list_id'},
             realm_name   => $c->config->{'whatcounts_realm_name'},
             pw           => $c->config->{'whatcounts_pw'},
@@ -99,28 +100,22 @@ sub approved : Chained('add_to_wc') : PathPart('approved') : Args(0) {
     );
     return unless $form->validated;
     if ( $c->req->method eq 'POST' ) {
+
         # Form validated, return to the books list
-        $c->stash->{status_msg}
-            = 'Your preferences have been saved.';
+        $c->stash->{status_msg} = 'Your preferences have been saved.';
     }
 }
 
-
 sub declined : Local : Args(0) {
     my ( $self, $c ) = @_;
-    my $id    = $c->req->params->{'trnId'};
-    my $amt   = $c->req->params->{'trnAmount'};
-    my $name  = $c->req->params->{'trnCustomerName'};
-    my $email = $c->req->params->{'trnEmailAddress'};
-    my $phone = $c->req->params->{'trnPhoneNumber'};
-    my $msg   = $c->req->params->{'messageText'};
     $c->stash(
-        trn_id     => $id,
-        message    => $msg,
-        cust_name  => $name,
-        trn_amt    => $amt,
-        cust_email => $email,
-        cust_phone => $phone,
+        trn_id  => $c->req->params->{'trnId'},
+        message => $c->req->params->{'messageText'},
+        cust_name =>
+            $c->req->params->{'trnCustomerName'},
+        trn_amt    => $c->req->params->{'trnAmount'},
+        cust_email => $c->req->params->{'trnEmailAddress'},
+        cust_phone => $c->req->params->{'trnPhoneNumber'},
         title      => 'Your transaction was not successful',
     );
 }
@@ -135,30 +130,6 @@ This library is free software. You can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
-
-# trnApproved=1
-# trnId=10000002
-# messageId=1
-# messageText=Approved
-# authCode=TEST
-# responseType=T
-# trnAmount=10.00
-# trnDate=2%2F27%2F2012+11%3A43%3A01+AM
-# trnOrderNumber=10000002
-# trnLanguage=eng
-# trnCustomerName=Phillip+Smith
-# trnEmailAddress=ps%40phillipadsmith.com
-# trnPhoneNumber=647+361+8248
-# avsProcessed=1
-# avsId=N
-# avsResult=0
-# avsAddrMatch=0
-# avsPostalMatch=0
-# avsMessage=Street+address+and+Postal%2FZIP+do+not+match.
-# cvdId=1&cardType=MC
-# trnType=P
-# paymentMethod=CC
-# ref1=&ref2=&ref3=&ref4=&ref5=
 
 __PACKAGE__->meta->make_immutable;
 

@@ -27,7 +27,7 @@ has_field 'newspref_education' =>
     ( type => 'Checkbox', widget => 'checkbox', label => 'Education' );
 has_field 'newspref_energy' =>
     ( type => 'Checkbox', widget => 'checkbox', label => 'Energy' );
-has_field 'newspref_environ' =>
+has_field 'newspref_enviro' =>
     ( type => 'Checkbox', widget => 'checkbox', label => 'Environment' );
 has_field 'newspref_health' =>
     ( type => 'Checkbox', widget => 'checkbox', label => 'Health' );

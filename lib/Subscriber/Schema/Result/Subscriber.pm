@@ -49,11 +49,6 @@ __PACKAGE__->table("subscriber");
   datetime_undef_if_invalid: 1
   is_nullable: 0
 
-=head2 trnordernumber
-
-  data_type: 'integer'
-  is_nullable: 1
-
 =head2 trnamount
 
   data_type: 'float'
@@ -247,8 +242,6 @@ __PACKAGE__->add_columns(
     datetime_undef_if_invalid => 1,
     is_nullable => 0,
   },
-  "trnordernumber",
-  { data_type => "integer", is_nullable => 1 },
   "trnamount",
   { data_type => "float", is_nullable => 0 },
   "trnemailaddress",
