@@ -57,8 +57,11 @@ has_field 'pref_enews_daily' => (
     widget => 'RadioGroup',
     label =>
         'Would you like our daily e-newsletter? It lists all the stories published in the last 24 hours, many of which you funded with your generous donation.',
-    options =>
-        [ { value => 1, label => 'Yes' }, { value => 0, label => 'No' } ],
+    options => [
+        { value => 1, label => 'Yes' },
+        { value => 0, label => 'No' },
+        { value => 2, label => 'Already subscribed' }
+    ],
     wrapper_attr => { class => 'radios' }
 );
 
@@ -67,8 +70,11 @@ has_field 'pref_enews_weekly' => (
     widget => 'RadioGroup',
     label =>
         'Would you like our weekly e-newlsetter? Same as the daily but with seven days of goodness and previews of upcoming events.',
-    options =>
-        [ { value => 1, label => 'Yes' }, { value => 0, label => 'No' } ],
+    options => [
+        { value => 1, label => 'Yes' },
+        { value => 0, label => 'No' },
+        { value => 2, label => 'Already subscribed' }
+    ],
     wrapper_attr => { class => 'radios' }
 );
 
@@ -86,23 +92,26 @@ has_field 'builder_is_anonymous' => (
     type   => 'Select',
     widget => 'RadioGroup',
     label =>
-        'We like to sometimes acknowledge our top donors publicly. May we acknowledge your donation?',
+        'We like to sometimes acknowledge donors publicly. May we acknowledge your donation?',
     options =>
         [ { value => 0, label => 'Yes' }, { value => 1, label => 'No' } ],
     wrapper_attr => { class => 'radios' }
 );
 
-has_field 'is_comment_avatar' => (
+has_field 'pref_future_enews' => (
     type   => 'Select',
     widget => 'RadioGroup',
     label =>
-        'Would you like the Builder logo to display when you add a comment to The Tyee commenting forum?',
+        'If we ever create a regular newsletter the collects stories about the news interest you selected above, would you like us to send it to you?',
     options =>
         [ { value => 1, label => 'Yes' }, { value => 0, label => 'No' } ],
     wrapper_attr => { class => 'radios' }
 );
 
-has_field 'submit_btn' =>
-    ( type => 'Submit', value => 'Save your preferences', widget => 'ButtonTag' );
+has_field 'submit_btn' => (
+    type   => 'Submit',
+    value  => 'Save your preferences',
+    widget => 'ButtonTag'
+);
 
 1;

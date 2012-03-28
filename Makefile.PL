@@ -24,6 +24,7 @@ requires 'HTTP::Tiny' => '0.017';
 requires 'DateTime::Format::MySQL';
 requires 'Catalyst::Plugin::CustomErrorMessage';
 requires 'HTML::FormHandler';
+requires 'HTML::FormHandler::Model::DBIC'
 
 test_requires 'Test::More' => '0.88';
 catalyst;
