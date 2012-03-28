@@ -1,5 +1,5 @@
 [% USE Dumper %]
-<!-- [% Dumper.dump_html( params ) %] --> 
+<!-- [% Dumper.dump_html( subscriber ) %] --> 
 
 <span class="message"><p>[% status_msg %]</p></span>
 <span class="error"><p>[% error_msg %]</p></span>
@@ -11,22 +11,22 @@
 
 <table id="order-info">
 <tr>
-<td><b>Order Number:</b></td><td><b>[% params.trnid %]</b></td>
+<td><b>Order Number:</b></td><td><b>[% subscriber.trnid %]</b></td>
 </tr>
 <tr>
-<td>Date:</td><td>[% params.trndate %]</td>
+<td>Date:</td><td>[% subscriber.trndate %]</td>
 </tr>
 <tr>
-<td>Donation amount:</td><td>$[% params.trnamount %]</td>
+<td>Donation amount:</td><td>$[% subscriber.trnamount %]</td>
 </tr>
 <tr>
-<td>Name:</td><td>[% params.name %]</td>
+<td>Name:</td><td>[% subscriber.name %]</td>
 </tr>
 <tr>
-<td>Phone number:</td><td>[% params.trnphonenumber %]</td>
+<td>Phone number:</td><td>[% subscriber.trnphonenumber %]</td>
 </tr>
 <tr>
-<td>E-mail:</td><td>[% params.trnemailaddress %]</td>
+<td>E-mail:</td><td>[% subscriber.trnemailaddress %]</td>
 </tr>
 </table>
 

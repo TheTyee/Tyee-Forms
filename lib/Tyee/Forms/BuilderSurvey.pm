@@ -2,7 +2,6 @@ package Tyee::Forms::BuilderSurvey;
 use HTML::FormHandler::Moose;
 extends 'HTML::FormHandler::Model::DBIC';
 with 'HTML::FormHandler::Render::Simple';
-with 'HTML::FormHandler::Blocks';
 
 has '+item_class' => ( default => 'Subscriber' );
 
