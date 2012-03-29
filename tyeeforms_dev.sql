@@ -11,7 +11,7 @@
  Target Server Version : 50521
  File Encoding         : utf-8
 
- Date: 03/28/2012 13:39:28 PM
+ Date: 03/28/2012 14:13:38 PM
 */
 
 SET NAMES utf8;
@@ -54,7 +54,6 @@ CREATE TABLE `subscriber` (
   `pref_enews_weekly` int(1) DEFAULT NULL,
   `pref_sponsor_enews` int(1) DEFAULT NULL,
   `builder_is_anonymous` int(1) DEFAULT NULL,
-  `is_comment_avatar` int(1) DEFAULT NULL,
   PRIMARY KEY (`trnId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

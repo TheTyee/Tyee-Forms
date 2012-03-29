@@ -1,6 +1,3 @@
-[% USE Dumper %]
-<!-- [% Dumper.dump_html( subscriber ) %] --> 
-
 <span class="message"><p>[% status_msg %]</p></span>
 <span class="error"><p>[% error_msg %]</p></span>
 

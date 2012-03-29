@@ -67,13 +67,10 @@ sub add_to_wc : Chained('add_to_db') PathPart('') CaptureArgs(0) {
     my $subscriber = $c->stash->{'subscriber'};
     my ( $sub_info, $whatcounts )
         = $c->model( 'WhatCounts' )->create_or_update(
-        {   builder_amt  => $c->stash->{'params'}->{'trnamount'},
-            builder_id   => $c->stash->{'params'}->{'trnid'},
-            builder_date => $c->stash->{'params'}->{'trndate'},
-            email        => $c->stash->{'params'}->{'trnemailaddress'},
-            list_id      => $c->config->{'whatcounts_list_id'},
-            realm_name   => $c->config->{'whatcounts_realm_name'},
-            pw           => $c->config->{'whatcounts_pw'},
+        {   subscriber => $c->stash->{'subscriber'},
+            list_id    => $c->config->{'whatcounts_list_id'},
+            realm_name => $c->config->{'whatcounts_realm_name'},
+            pw         => $c->config->{'whatcounts_pw'},
         }
         );
     my ( $subscriber_id ) = ( $sub_info->{'content'} =~ m/^(\d+)/ );
@@ -90,7 +87,10 @@ sub add_to_wc : Chained('add_to_db') PathPart('') CaptureArgs(0) {
 sub approved : Chained('add_to_wc') : PathPart('approved') : Args(0) {
     my ( $self, $c ) = @_;
     my $form = $self->form;
-    $c->stash( form => $form );
+    $c->stash(
+        form  => $form,
+        title => 'Your transaction was successful',
+    );
 
     # Validate and insert/update database
     $form->process(
@@ -102,17 +102,23 @@ sub approved : Chained('add_to_wc') : PathPart('approved') : Args(0) {
     if ( $c->req->method eq 'POST' ) {
 
         # Form validated, return to the books list
-        $c->stash->{status_msg} = 'Your preferences have been saved.';
+        my ( $whatcounts ) = $c->model( 'WhatCounts' )->update(
+            {   subscriber => $c->stash->{'subscriber'},
+                list_id    => $c->config->{'whatcounts_list_id'},
+                realm_name => $c->config->{'whatcounts_realm_name'},
+                pw         => $c->config->{'whatcounts_pw'},
+            }
+        );
+        $c->stash->{'status_msg'} = 'Your preferences have been saved.';
     }
 }
 
 sub declined : Local : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash(
-        trn_id  => $c->req->params->{'trnId'},
-        message => $c->req->params->{'messageText'},
-        cust_name =>
-            $c->req->params->{'trnCustomerName'},
+        trn_id     => $c->req->params->{'trnId'},
+        message    => $c->req->params->{'messageText'},
+        cust_name  => $c->req->params->{'trnCustomerName'},
         trn_amt    => $c->req->params->{'trnAmount'},
         cust_email => $c->req->params->{'trnEmailAddress'},
         cust_phone => $c->req->params->{'trnPhoneNumber'},
