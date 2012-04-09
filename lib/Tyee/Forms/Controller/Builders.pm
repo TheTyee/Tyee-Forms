@@ -67,7 +67,7 @@ sub add_to_wc : Chained('add_to_db') PathPart('') CaptureArgs(0) {
     my $subscriber = $c->stash->{'subscriber'};
     my ( $sub_info, $whatcounts )
         = $c->model( 'WhatCounts' )->create_or_update(
-        {   subscriber => $c->stash->{'subscriber'},
+        {   subscriber => $subscriber,
             list_id    => $c->config->{'whatcounts_list_id'},
             realm_name => $c->config->{'whatcounts_realm_name'},
             pw         => $c->config->{'whatcounts_pw'},
@@ -99,11 +99,11 @@ sub approved : Chained('add_to_wc') : PathPart('approved') : Args(0) {
         schema  => $c->model( 'SubscriberDB' )->schema
     );
     return unless $form->validated;
-    if ( $c->req->method eq 'POST' ) {
 
-        # Form validated, return to the books list
-        my ( $whatcounts ) = $c->model( 'WhatCounts' )->update(
-            {   subscriber => $c->stash->{'subscriber'},
+    if ( $form->validated && $c->req->method eq 'POST' ) {
+        # Form validated, update WhatCounts
+        my ( $whatcounts, $params ) = $c->model( 'WhatCounts' )->update(
+            {   subscriber => $c->model( 'SubscriberDB::Subscriber' )->find( $c->stash->{'params'}->{'trnid'} ),
                 list_id    => $c->config->{'whatcounts_list_id'},
                 realm_name => $c->config->{'whatcounts_realm_name'},
                 pw         => $c->config->{'whatcounts_pw'},

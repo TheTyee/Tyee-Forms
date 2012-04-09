@@ -101,7 +101,7 @@ has_field 'pref_future_enews' => (
     type   => 'Select',
     widget => 'RadioGroup',
     label =>
-        'If we ever create a regular newsletter the collects stories about the news interest you selected above, would you like us to send it to you?',
+        'If we ever create a regular newsletter that collects stories about the news interest you selected above, would you like us to send it to you?',
     options =>
         [ { value => 1, label => 'Yes' }, { value => 0, label => 'No' } ],
     wrapper_attr => { class => 'radios' }

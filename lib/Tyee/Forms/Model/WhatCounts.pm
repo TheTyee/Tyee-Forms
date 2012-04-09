@@ -46,12 +46,13 @@ sub create_or_update {
     unless ( $subscribed->{'content'} ) {
         $subscribed = $http->get( $API . $search_params );
     }
-    return ( $subscribed, $response, $response );
+    return ( $subscribed, $response );
 }
 
 sub update {
     my ( $self, $sub ) = @_;
     my $subscriber = $sub->{'subscriber'};
+    # TODO Make this a hash with the field name as the key
     my $email      = $subscriber->trnemailaddress;
     my $accountgov = $subscriber->newspref_accountgov;
     my $arts_comm  = $subscriber->newspref_arts_comm;
@@ -74,12 +75,13 @@ sub update {
         r => $sub->{'realm_name'},
         p => $sub->{'pw'},
     );
+    # TODO Improve the data part of the post to only pass fields that we have values for
     my $get = {
         %args,
         cmd     => 'update',
         list_id => $sub->{'list_id'},
         data =>
-            "email,custom_newspref_accountgov,custom_newspref_arts_comm,custom_,custom_newspref_crime_just,custom_newspref_economy,custom_newspref_education,custom_newspref_energy,custom_newspref_enviro,custom_newspref_health,custom_newspref_housing,custom_newspref_poverty,custom_newspref_rights_just,custom_pref_fiction,custom_pref_enews_daily,custom_pref_enews_weekly,custom_pref_sponsor_enews,custom_builder_is_anonymous,custom_pref_future_enews^$email,$accountgov,$arts_comm,$crime_just,$economy,$education,$energy,$enviro,$health,$housing,$poverty,$rights,$fiction,$daily,$weekly,$sponsor,$anon,$future"
+            "email,custom_newspref_accountgov,custom_newspref_arts_comm,custom_newspref_crime_just,custom_newspref_economy,custom_newspref_education,custom_newspref_energy,custom_newspref_enviro,custom_newspref_health,custom_newspref_housing,custom_newspref_poverty,custom_newspref_rights_just,custom_pref_fiction,custom_pref_enews_daily,custom_pref_enews_weekly,custom_pref_sponsor_enews,custom_builder_is_anonymous,custom_pref_future_enews^$email,$accountgov,$arts_comm,$crime_just,$economy,$education,$energy,$enviro,$health,$housing,$poverty,$rights,$fiction,$daily,$weekly,$sponsor,$anon,$future"
     };
     my $params = $http->www_form_urlencode( $get );
     my $response
