@@ -23,7 +23,7 @@ requires 'Catalyst::View:TT';
 requires 'HTTP::Tiny' => '0.017';
 requires 'DateTime::Format::MySQL';
 requires 'Catalyst::Plugin::CustomErrorMessage';
-requires 'HTML::FormHandler';
+requires 'HTML::FormHandler' => '0.40003';
 requires 'HTML::FormHandler::Model::DBIC'
 
 test_requires 'Test::More' => '0.88';

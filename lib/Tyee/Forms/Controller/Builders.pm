@@ -41,7 +41,7 @@ sub index : Chained('/') PathPart('builders') CaptureArgs(0) {
         params => {
             trnid           => $c->req->params->{'trnId'},
             trnamount       => $c->req->params->{'trnAmount'},
-            trndate         => $c->req->params->{'trnDate'},
+            #trndate         => $c->req->params->{'trnDate'},
             name            => $c->req->params->{'trnCustomerName'},
             trnemailaddress => $c->req->params->{'trnEmailAddress'},
             trnphonenumber  => $c->req->params->{'trnPhoneNumber'},
@@ -75,8 +75,7 @@ sub add_to_wc : Chained('add_to_db') PathPart('') CaptureArgs(0) {
         );
     my ( $subscriber_id ) = ( $sub_info->{'content'} =~ m/^(\d+)/ );
     if ( $whatcounts->{'content'} =~ /success/i ) {
-
- # If the API call is successful, update the subscriber record in our database
+        # If the API call is successful, update the subscriber record in our database
         $subscriber->whatcounts( '1' );
         $subscriber->whatcounts_msg( $whatcounts->{'content'} );
         $subscriber->whatcounts_sub_id( $subscriber_id );
@@ -109,9 +108,19 @@ sub approved : Chained('add_to_wc') : PathPart('approved') : Args(0) {
                 pw         => $c->config->{'whatcounts_pw'},
             }
         );
-        $c->stash->{'status_msg'} = 'Your preferences have been saved.';
+        #$c->stash->{'status_msg'} = 'Your preferences have been saved.';
+        $c->forward('thankyou');
     }
 }
+
+sub thankyou : Local : Args(0) {
+    my ( $self, $c ) = @_;
+    $c->stash(
+        template => 'builders/thankyou.tt',
+
+    );
+}
+
 
 sub declined : Local : Args(0) {
     my ( $self, $c ) = @_;
