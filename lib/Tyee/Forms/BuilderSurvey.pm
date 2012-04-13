@@ -40,17 +40,6 @@ has_field 'newspref_rights_just' => (
     label  => 'Rights and justice'
 );
 
-has_field 'pref_fiction' => (
-    type    => 'Select',
-    widget  => 'RadioGroup',
-    label   => 'Do you like fiction or non-fiction?',
-    options => [
-        { value => 0, label => 'Non-fiction' },
-        { value => 1, label => 'Fiction' }
-    ],
-    wrapper_attr => { class => 'radios' }
-);
-
 has_field 'pref_enews_daily' => (
     type   => 'Select',
     widget => 'RadioGroup',
