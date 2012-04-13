@@ -33,10 +33,13 @@ Catalyst Controller.
 
 sub index : Chained('/') PathPart('builders') CaptureArgs(0) {
     my ( $self, $c ) = @_;
+    # Make a nice DateTime object
     my $dt = DateTime->from_epoch(
         epoch => str2time( $c->req->params->{'trnDate'} ) );
-    my ( $fname, $lname )
-        = split( ' ', $c->req->params->{'trnCustomerName'} );
+    # Parse out the first and last name
+    my $name = $c->req->params->{'trnCustomerName'};
+    $name =~ /^(?<fname>\w*)(.+?)(?<lname>\w*)$/;
+    my ( $fname, $lname ) = ( $+{fname}, $+{lname} );
     $c->stash(
         params => {
             trnid           => $c->req->params->{'trnId'},

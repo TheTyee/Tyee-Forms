@@ -15,6 +15,9 @@ sub create_or_update {
     my $level      = $subscriber->trnamount;
     my $number     = $subscriber->trnid;
     my $date       = $subscriber->trndate;
+    my $first      = $subscriber->name_first;
+    my $last       = $subscriber->name_last;
+    my $name       = $subscriber->name;
     my %args       = (
         r => $sub->{'realm_name'},
         p => $sub->{'pw'},
@@ -36,7 +39,7 @@ sub create_or_update {
         list_id => $sub->{'list_id'},
 
         data =>
-            "email,custom_builder_level,custom_builder_number,custom_builder_sub_date^$email,$level,$number,$date"
+            "email,first,last,custom_name_full,custom_builder_level,custom_builder_number,custom_builder_sub_date^$email,$first,$last,$name,$level,$number,$date"
     };
     my $params = $http->www_form_urlencode( $get );
     my $response
@@ -52,6 +55,7 @@ sub create_or_update {
 sub update {
     my ( $self, $sub ) = @_;
     my $subscriber = $sub->{'subscriber'};
+
     # TODO Make this a hash with the field name as the key
     my $email      = $subscriber->trnemailaddress;
     my $accountgov = $subscriber->newspref_accountgov;
@@ -75,7 +79,8 @@ sub update {
         r => $sub->{'realm_name'},
         p => $sub->{'pw'},
     );
-    # TODO Improve the data part of the post to only pass fields that we have values for
+
+# TODO Improve the data part of the post to only pass fields that we have values for
     my $get = {
         %args,
         cmd     => 'update',
