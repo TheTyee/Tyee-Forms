@@ -164,6 +164,7 @@ sub public : Chained('list') : PathPart('public') : Args(1) {
         {   columns      => [qw/ name_first name_last /],
             page         => 1,
             rows         => $c->stash->{'limit'},
+            order_by => { -desc => 'trnid' },
             # Recommended way to send simple data to a template vs. sending the ResultSet object
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
