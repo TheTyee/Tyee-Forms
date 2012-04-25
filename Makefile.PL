@@ -20,11 +20,12 @@ requires 'Config::General'; # This should reflect the config file format you've 
 
 requires 'DateTime';
 requires 'Catalyst::View:TT';
+requires 'Catalyst::View::JSON';
 requires 'HTTP::Tiny' => '0.017';
 requires 'DateTime::Format::MySQL';
 requires 'Catalyst::Plugin::CustomErrorMessage';
 requires 'HTML::FormHandler' => '0.40003';
-requires 'HTML::FormHandler::Model::DBIC'
+requires 'HTML::FormHandler::Model::DBIC';
 
 test_requires 'Test::More' => '0.88';
 catalyst;

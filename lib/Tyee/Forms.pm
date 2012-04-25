@@ -37,8 +37,14 @@ our $VERSION = '0.01';
 
 __PACKAGE__->config(
     name => 'Tyee::Forms',
+    default_view => 'HTML',
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
+    'View::JSON' => {
+        allow_callback  => 1,    # defaults to 0
+        callback_param  => 'cb', # defaults to 'callback'
+        expose_stash    => [ qw(subscribers) ], # defaults to everything
+    },
 );
 
 __PACKAGE__->config->{'custom-error-message'}->{'error-template'} = 'error.tt';

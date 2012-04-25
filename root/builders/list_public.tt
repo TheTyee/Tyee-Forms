@@ -1,0 +1,13 @@
+[% FOREACH sub IN subscribers %]
+    [% sub.trnid %]
+[% END %]
+
+
+<ul>
+[% WHILE (sub = subscribers.next) %]
+    <li>[% sub.name_first %] [% sub.name_last %]</li>
+[% END %]
+</ul>
+
+[%# USE Dumper %]
+[%# Dumper.dump_html(subscribers) %]
