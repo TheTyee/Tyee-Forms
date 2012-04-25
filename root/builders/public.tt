@@ -1,0 +1,5 @@
+<ul id="builders">
+[% FOREACH sub IN subscribers %]
+    <li>[% sub.name_first %] [% sub.name_last %]</li>
+[% END %]
+</ul>
